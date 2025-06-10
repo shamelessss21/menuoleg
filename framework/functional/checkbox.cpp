@@ -34,9 +34,9 @@ bool c_widget::checkbox(std::string_view label, bool* callback)
 
     c_checkbox* state = gui->anim_container(&state, id);
     state->text_colored = ImLerp(state->text_colored, *callback ? clr->c_text.text_active : hovered ? clr->c_text.text_hov : clr->c_text.text, ImGui::GetIO().DeltaTime * 8.f);
-    state->background = ImLerp(state->background, *callback ? clr->c_element.checkbox_active : clr->c_element.layout, ImGui::GetIO().DeltaTime * 8.f);
+    state->background = ImLerp(state->background, *callback ? clr->c_button.active : hovered ? clr->c_button.hover : clr->c_button.background, ImGui::GetIO().DeltaTime * 8.f);
 
-    state->circle = ImLerp(state->circle, *callback ? clr->c_other_clr.accent_clr : clr->c_element.circle, ImGui::GetIO().DeltaTime * 8.f);
+    state->circle = ImLerp(state->circle, *callback ? clr->c_other_clr.accent_clr : clr->c_button.border, ImGui::GetIO().DeltaTime * 8.f);
     state->circle_offset = ImLerp(state->circle_offset, *callback ? 28.f : 12.f, gui->fixed_speed(30.f));
 
     if (pressed)
@@ -45,7 +45,8 @@ bool c_widget::checkbox(std::string_view label, bool* callback)
         MarkItemEdited(id);
     }
 
-    draw->add_rect_filled(window->DrawList, rect.Min, rect.Max, gui->get_clr(state->background), SCALE(100.f));
+    draw->add_rect_filled(window->DrawList, rect.Min, rect.Max, gui->get_clr(state->background), SCALE(set->c_button.rounding));
+    draw->add_rect(window->DrawList, rect.Min, rect.Max, gui->get_clr(clr->c_button.border), SCALE(set->c_button.rounding), 0, set->c_button.border);
     draw->add_circle_filled(window->DrawList, { rect.Min.x + SCALE(state->circle_offset), rect.GetCenter().y }, SCALE(6.f), gui->get_clr(state->circle), SCALE(100.f));
 
     draw->render_text(window->DrawList, set->c_font.inter_medium[0], clickable_rect.Min, clickable_rect.Max, gui->get_clr(state->text_colored), label.data(), NULL, NULL, { 0.0, 0.5 });
@@ -118,7 +119,8 @@ bool c_widget::checkbox_with_key(std::string_view label, bool* callback, int* ke
         MarkItemEdited(id);
     }
 
-    draw->add_rect_filled(window->DrawList, rect.Min, rect.Max, gui->get_clr(state->background), SCALE(100.f));
+    draw->add_rect_filled(window->DrawList, rect.Min, rect.Max, gui->get_clr(state->background), SCALE(set->c_button.rounding));
+    draw->add_rect(window->DrawList, rect.Min, rect.Max, gui->get_clr(clr->c_button.border), SCALE(set->c_button.rounding), 0, set->c_button.border);
     draw->add_circle_filled(window->DrawList, { rect.Min.x + SCALE(state->circle_offset), rect.GetCenter().y }, SCALE(6.f), gui->get_clr(state->circle), SCALE(100.f));
 
     draw->render_text(window->DrawList, set->c_font.icon[1], clickable_rect.Min, clickable_rect.Max - ImVec2(SCALE(60), 0), gui->get_clr(clr->c_element.popup_icon), "E", NULL, NULL, {1.0, 0.5});
@@ -177,7 +179,8 @@ bool c_widget::checkbox_with_color(std::string_view label, bool* callback, float
         MarkItemEdited(id);
     }
 
-    draw->add_rect_filled(window->DrawList, rect.Min, rect.Max, gui->get_clr(state->background), SCALE(100.f));
+    draw->add_rect_filled(window->DrawList, rect.Min, rect.Max, gui->get_clr(state->background), SCALE(set->c_button.rounding));
+    draw->add_rect(window->DrawList, rect.Min, rect.Max, gui->get_clr(clr->c_button.border), SCALE(set->c_button.rounding), 0, set->c_button.border);
     draw->add_circle_filled(window->DrawList, { rect.Min.x + SCALE(state->circle_offset), rect.GetCenter().y }, SCALE(6.f), gui->get_clr(state->circle), SCALE(100.f));
 
     draw->render_text(window->DrawList, set->c_font.inter_medium[0], clickable_rect.Min, clickable_rect.Max, gui->get_clr(state->text_colored), label.data(), NULL, NULL, { 0.0, 0.5 });

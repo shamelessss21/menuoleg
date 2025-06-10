@@ -20,14 +20,9 @@ void c_gui::render()
 			ImDrawList* draw_list = GetWindowDrawList();
 			ImGuiStyle* style = &GetStyle();
 
-			{
-				style->WindowBorderSize = SCALE(set->c_window.border_size);
-				style->WindowRounding = SCALE(set->c_window.rounding);
-				style->WindowPadding = SCALE(set->c_window.padding);
-
-				style->ScrollbarSize = SCALE(set->c_window.scrollbar_size);
-				style->ItemSpacing = SCALE(set->c_window.item_spacing);
-			}
+                        {
+                                set->apply_style(*style);
+                        }
 
 			draw_background_blur(draw_list, g_pSwapChain, g_pd3dDevice, g_pd3dDeviceContext, GetWindowPos(), GetWindowPos() + GetWindowSize(), style->WindowRounding);
 			

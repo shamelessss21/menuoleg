@@ -17,7 +17,8 @@ bool c_widget::button(std::string_view label, const ImVec2& size)
     const float width = GetContentRegionAvail().x;
 
     const ImVec2 pos = window->DC.CursorPos;
-    ImRect rect(pos, pos + size);
+    ImVec2 final_size = size.x == 0 && size.y == 0 ? SCALE(set->c_button.size) : size;
+    ImRect rect(pos, pos + final_size);
 
     ItemSize(rect, 0);
     if (!ItemAdd(rect, id)) return false;
@@ -27,9 +28,12 @@ bool c_widget::button(std::string_view label, const ImVec2& size)
     if (pressed) MarkItemEdited(id);
 
     button_state* state = gui->anim_container(&state, id);
-    state->background = ImLerp(state->background, IsItemActive() ? clr->c_other_clr.accent_clr : clr->c_element.layout, gui->fixed_speed(8.f));
+    state->background = ImLerp(state->background, IsItemActive() ? clr->c_button.active : hovered ? clr->c_button.hover : clr->c_button.background, gui->fixed_speed(8.f));
 
-    draw->add_rect_filled(window->DrawList, rect.Min, rect.Max, gui->get_clr(state->background), SCALE(set->c_element.rounding));
+    draw->add_rect_filled(window->DrawList, rect.Min, rect.Max, gui->get_clr(state->background), SCALE(set->c_button.rounding));
+    draw->add_rect(window->DrawList, rect.Min, rect.Max,
+                   gui->get_clr(clr->c_button.border),
+                   SCALE(set->c_button.rounding), 0, set->c_button.border);
     draw->render_text(set->c_font.inter_medium[0], window->DrawList, rect.Min, rect.Max, gui->get_clr(clr->c_text.text_active), label.data(), NULL, NULL, {0.5, 0.5}, NULL);
 
     return pressed;

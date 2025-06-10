@@ -19,7 +19,7 @@ bool selectable_ex(std::string_view label, bool active, ImDrawFlags rounded_flag
     struct c_selectable
     {
         float alpha{ 0.f }, offset{ 0.f };
-        ImVec4 rect{ clr->c_element.layout }, text{ clr->c_text.text };
+        ImVec4 rect{ clr->c_button.background }, text{ clr->c_text.text };
     };
 
     ImGuiWindow* window = GetCurrentWindow();
@@ -44,9 +44,9 @@ bool selectable_ex(std::string_view label, bool active, ImDrawFlags rounded_flag
     c_selectable* state{ gui->anim_container(&state, id) };
 
     state->alpha = ImClamp(state->alpha + (gui->fixed_speed(6.f) * (active ? 1.f : -1.f)), 0.f, 1.f);
-    state->text = ImLerp(state->text, active ? clr->c_other_clr.accent_clr : clr->c_text.text_active, gui->fixed_speed(set->c_element.rounding));
+    state->text = ImLerp(state->text, active ? clr->c_other_clr.accent_clr : clr->c_text.text_active, gui->fixed_speed(set->c_button.rounding));
 
-    draw->add_rect_filled(window->DrawList, rect.Min, rect.Max, gui->get_clr(clr->c_element.dropdown_selection_layout, state->alpha), SCALE(set->c_element.rounding), rounded_flag);
+    draw->add_rect_filled(window->DrawList, rect.Min, rect.Max, gui->get_clr(clr->c_button.background, state->alpha), SCALE(set->c_button.rounding), rounded_flag);
     draw->render_text(set->c_font.inter_medium[0], window->DrawList, rect.Min + SCALE(7, 0), rect.Max, gui->get_clr(state->text), label.data(), NULL, NULL, { 0.0, 0.5 }, NULL);
 
     return pressed;
@@ -113,7 +113,7 @@ bool dropdown_list(std::string_view label, std::string_view preview_value, int v
     state->text_size = ImLerp(state->text_size, CalcTextSize(preview_value.data()).x < width - CalcTextSize(label.data()).x - 60 ? CalcTextSize(preview_value.data()).x : width - CalcTextSize(label.data()).x - 60, g.IO.DeltaTime * 8.f);
     open_combo.Min.x -= state->text_size;
 
-    draw->add_rect_filled(window->DrawList, open_combo.Min, open_combo.Max, gui->get_clr(clr->c_element.layout), SCALE(set->c_element.rounding));
+    draw->add_rect_filled(window->DrawList, open_combo.Min, open_combo.Max, gui->get_clr(clr->c_button.background), SCALE(set->c_button.rounding));
     draw->render_text(set->c_font.inter_medium[0], window->DrawList, open_combo.Min + SCALE(10, 0), open_combo.Max - ImVec2(rect_size, 0), gui->get_clr(clr->c_text.text_active), preview_value.data(), NULL, NULL, { 0.0, 0.5 }, NULL);
 
     draw->render_text(set->c_font.icon[0], window->DrawList, open_combo.Max - ImVec2(rect_size, rect_size), open_combo.Max, gui->get_clr(clr->c_text.text), "G", NULL, NULL, { 0.5, 0.60 }, NULL);
@@ -125,10 +125,10 @@ bool dropdown_list(std::string_view label, std::string_view preview_value, int v
     gui->push_style_var(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     gui->push_style_var(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0 ));
 
-    gui->push_style_var(ImGuiStyleVar_WindowRounding, set->c_element.rounding);
+    gui->push_style_var(ImGuiStyleVar_WindowRounding, set->c_button.rounding);
     gui->push_style_var(ImGuiStyleVar_WindowBorderSize, 0.f);
 
-    gui->push_style_color(ImGuiCol_WindowBg, gui->get_clr(clr->c_element.layout));
+    gui->push_style_color(ImGuiCol_WindowBg, gui->get_clr(clr->c_button.background));
 
     gui->set_next_window_pos(open_combo.GetBL() + ImVec2(0, state->offset));
     gui->set_next_window_size(ImVec2(open_combo.GetWidth(), calc_combo_size(val, rect_size)));
@@ -268,7 +268,7 @@ bool tool_dropdown_list(std::string_view label, std::string_view preview_value, 
         state->alpha = 0.f;
     }
 
-    draw->add_rect_filled(window->DrawList, rect.Min, rect.Max, gui->get_clr(clr->c_element.layout), SCALE(set->c_element.rounding));
+    draw->add_rect_filled(window->DrawList, rect.Min, rect.Max, gui->get_clr(clr->c_button.background), SCALE(set->c_button.rounding));
     draw->render_text(set->c_font.inter_medium[0], window->DrawList, rect.Min + SCALE(10, 0), rect.Max - ImVec2(SCALE(36.f), 0), gui->get_clr(clr->c_text.text_active), preview_value.data(), NULL, NULL, { 0.0, 0.5 }, NULL);
 
     draw->render_text(set->c_font.icon[0], window->DrawList, rect.Max - ImVec2(SCALE(36.f), SCALE(36.f)), rect.Max, gui->get_clr(clr->c_text.text), "G", NULL, NULL, { 0.5, 0.50 }, NULL);
@@ -279,10 +279,10 @@ bool tool_dropdown_list(std::string_view label, std::string_view preview_value, 
     gui->push_style_var(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     gui->push_style_var(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0 ));
 
-    gui->push_style_var(ImGuiStyleVar_WindowRounding, set->c_element.rounding);
+    gui->push_style_var(ImGuiStyleVar_WindowRounding, set->c_button.rounding);
     gui->push_style_var(ImGuiStyleVar_WindowBorderSize, 0.f);
 
-    gui->push_style_color(ImGuiCol_WindowBg, gui->get_clr(clr->c_element.layout));
+    gui->push_style_color(ImGuiCol_WindowBg, gui->get_clr(clr->c_button.background));
 
     gui->set_next_window_pos(rect.GetBL() + ImVec2(0, state->offset));
     gui->set_next_window_size(ImVec2(rect.GetWidth(), calc_combo_size(val, SCALE(30.f))));
